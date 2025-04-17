@@ -1,3 +1,5 @@
+name: Explore With Me API Tests
+
 on:
   pull_request:
 
