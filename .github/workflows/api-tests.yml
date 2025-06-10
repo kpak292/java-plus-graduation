@@ -1,6 +1,0 @@
-on:
-  pull_request:
-
-jobs:
-  build:
-    uses: yandex-praktikum/java-plus-graduation/.github/workflows/api-tests.yml@ci
