@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import ru.practicum.Constants;
-import ru.practicum.StatsHitDto;
-import ru.practicum.StatsViewDto;
+import ru.practicum.dto.stats.StatsHitDto;
+import ru.practicum.dto.stats.StatsViewDto;
 import ru.practicum.client.configuration.StatsClientConfiguration;
 
 import java.time.LocalDateTime;

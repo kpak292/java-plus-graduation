@@ -10,6 +10,8 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.practicum.dal.StatRepository;
+import ru.practicum.dto.stats.StatsHitDto;
+import ru.practicum.dto.stats.StatsViewDto;
 import ru.practicum.exceptions.ValidationException;
 import ru.practicum.mappers.StatsMapper;
 import ru.practicum.model.StatItem;

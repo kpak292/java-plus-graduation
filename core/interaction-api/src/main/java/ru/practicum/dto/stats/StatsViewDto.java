@@ -1,4 +1,4 @@
-package ru.practicum;
+package ru.practicum.dto.stats;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;

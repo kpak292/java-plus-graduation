@@ -9,6 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.practicum.controller.StatsController;
+import ru.practicum.dto.stats.StatsHitDto;
+import ru.practicum.dto.stats.StatsViewDto;
 import ru.practicum.service.StatsService;
 
 import java.time.LocalDateTime;

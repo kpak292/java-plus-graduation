@@ -45,3 +45,9 @@ services:
       - POSTGRES_DB=ewmdb
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+#  user-service:
+#    build: user-service
+#    container_name: user-service-container
+#    depends_on:
+#      - ewm-db

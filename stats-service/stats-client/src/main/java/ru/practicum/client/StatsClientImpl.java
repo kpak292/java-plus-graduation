@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import ru.practicum.StatsHitDto;
-import ru.practicum.StatsViewDto;
+import ru.practicum.dto.stats.StatsHitDto;
+import ru.practicum.dto.stats.StatsViewDto;
 
 import java.util.List;
 import java.util.Optional;
