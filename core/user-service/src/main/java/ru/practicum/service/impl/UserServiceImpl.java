@@ -1,9 +1,7 @@
 package ru.practicum.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,16 +16,15 @@ import ru.practicum.service.UserService;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-    @Autowired
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Transactional
     @Override
     public UserDto newUser(NewUserDto dto) {
         User user = userRepository.save(userMapper.getUser(dto));
@@ -43,12 +40,16 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    @Transactional
     @Override
     public void deleteUser(long userId) {
         checkUser(userId);
         userRepository.deleteById(userId);
         log.info("User {} deleted", userId);
+    }
+
+    @Override
+    public Optional<UserDto> getUserById(long userId) {
+        return userRepository.findById(userId).map(userMapper::getUserDto);
     }
 
     private void checkUser(long userId) {

@@ -2,7 +2,6 @@ package ru.practicum.dto.comment;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import ru.practicum.dto.user.UserShortDto;
 
 @Getter
 @Setter
@@ -15,5 +14,5 @@ public class CommentDto {
 
     String message;
 
-    UserShortDto author;
+    Long author;
 }
