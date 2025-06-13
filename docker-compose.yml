@@ -37,19 +37,50 @@ services:
 #    container_name: user-service-container
 #    depends_on:
 #      - ewm-db
+#    environment:
+#      - STATS_GATEWAY_URL=http://stats-server:9090
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=users_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
 #  comment-service:
 #    build: comment-service
 #    container_name: comment-service-container
 #    depends_on:
 #      - ewm-db
+#    environment:
+#      - STATS_GATEWAY_URL=http://stats-server:9090
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=comments_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
 #  event-service:
 #    build: event-service
 #    container_name: event-service-container
 #    depends_on:
 #      - ewm-db
+#    environment:
+#      - STATS_GATEWAY_URL=http://stats-server:9090
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=events_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
 #  request-service:
 #    build: request-service
 #    container_name: request-service-container
 #    depends_on:
 #      - ewm-db
+#    environment:
+#      - STATS_GATEWAY_URL=http://stats-server:9090
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewmdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=requests_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
 

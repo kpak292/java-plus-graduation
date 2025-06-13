@@ -29,7 +29,7 @@ public class StatsController {
     public Collection<StatsViewDto> getStat(@RequestParam String start,
                                             @RequestParam String end,
                                             @RequestParam(required = false) List<String> uris,
-                                            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+                                            @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("GET/stats with params start = {}, end = {}, uris = {}, unique = {}",
                 start, end, uris, unique);
         return statsService.getStats(start, end, uris, unique);

@@ -20,5 +20,5 @@ public interface StatsClient {
     Collection<StatsViewDto> getStat(@RequestParam String start,
                                      @RequestParam String end,
                                      @RequestParam(required = false) List<String> uris,
-                                     @RequestParam(required = false, defaultValue = "false") Boolean unique);
+                                     @RequestParam(defaultValue = "false") Boolean unique);
 }
