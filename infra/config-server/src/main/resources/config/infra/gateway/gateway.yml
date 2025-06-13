@@ -6,13 +6,69 @@ spring:
     gateway:
       discovery.locator.enabled: true
       routes:
-        - id: main-service-route
-          uri: lb://main-service
+        - id: user-service-route
+          uri: lb://user-service
           predicates:
-            - Path=/**
+            - Path=/admin/users/**
           filters:
+            - PrefixPath=/api/v1
             - name: Retry
               args:
                 retries: 3
-                statuses: [NOT_FOUND]
-                methods: [GET]
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
+        - id: category-service-route
+          uri: lb://event-service
+          predicates:
+            - Path=/admin/categories/**, /categories/**
+          filters:
+            - PrefixPath=/api/v1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
+        - id: event-service-route
+          uri: lb://event-service
+          predicates:
+            - Path=/admin/events/**, /events/**,/users/{userId}/events, /users/{userId}/events/{eventId}
+          filters:
+            - PrefixPath=/api/v1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
+        - id: compilation-service-route
+          uri: lb://event-service
+          predicates:
+            - Path=/admin/compilations/**, /compilations/**
+          filters:
+            - PrefixPath=/api/v1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
+        - id: request-service-route
+          uri: lb://request-service
+          predicates:
+            - Path=/users/{userId}/requests/**, /users/{userId}/events/{eventId}/requests/**
+          filters:
+            - PrefixPath=/api/v1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
+        - id: comment-service-route
+          uri: lb://comment-service
+          predicates:
+            - Path=/admin/events/{eventId}/comments/**, /users/{userId}/events/{eventId}/comments/**
+          filters:
+            - PrefixPath=/api/v1
+            - name: Retry
+              args:
+                retries: 3
+                statuses: [ INTERNAL_SERVER_ERROR ]
+                methods: [ GET ]
