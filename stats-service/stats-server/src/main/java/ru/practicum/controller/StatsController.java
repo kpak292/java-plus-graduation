@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.StatsHitDto;
-import ru.practicum.StatsViewDto;
+import ru.practicum.dto.stats.StatsHitDto;
+import ru.practicum.dto.stats.StatsViewDto;
 import ru.practicum.service.StatsService;
 
 import java.util.Collection;
@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class StatsController {
-
     private final StatsService statsService;
 
     @PostMapping("/hit")
@@ -30,7 +29,7 @@ public class StatsController {
     public Collection<StatsViewDto> getStat(@RequestParam String start,
                                             @RequestParam String end,
                                             @RequestParam(required = false) List<String> uris,
-                                            @RequestParam(required = false, defaultValue = "false") Boolean unique) {
+                                            @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("GET/stats with params start = {}, end = {}, uris = {}, unique = {}",
                 start, end, uris, unique);
         return statsService.getStats(start, end, uris, unique);
