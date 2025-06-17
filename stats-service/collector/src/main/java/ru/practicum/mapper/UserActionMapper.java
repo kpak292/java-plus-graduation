@@ -2,8 +2,6 @@ package ru.practicum.mapper;
 
 import com.google.protobuf.Timestamp;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ValueMapping;
 import org.mapstruct.factory.Mappers;
 import ru.practicum.ewm.stats.avro.ActionTypeAvro;
 import ru.practicum.ewm.stats.avro.UserActionAvro;
@@ -22,8 +20,8 @@ public interface UserActionMapper {
         return Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
     }
 
-    default ActionTypeAvro toAvroType(ActionTypeProto type){
-        return switch (type){
+    default ActionTypeAvro toAvroType(ActionTypeProto type) {
+        return switch (type) {
             case ACTION_VIEW -> ActionTypeAvro.VIEW;
             case ACTION_LIKE -> ActionTypeAvro.LIKE;
             case ACTION_REGISTER -> ActionTypeAvro.REGISTER;

@@ -14,7 +14,7 @@ import ru.practicum.service.CollectorService;
 public class CollectorServiceImpl implements CollectorService {
     private final KafkaTemplate<String, UserActionAvro> kafkaTemplate;
 
-    @Value("${collector.topic.stats.events.v1}")
+    @Value("${collector.topic.stats.v1}")
     private String USER_ACTION_TOPIC;
 
     @Override

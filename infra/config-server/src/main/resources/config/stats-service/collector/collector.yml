@@ -6,8 +6,7 @@ spring:
 collector:
   topic:
     stats:
-      events:
-        v1: stats.user-actions.v1
+      v1: stats.user-actions.v1
 
 grpc:
   server:

@@ -1,0 +1,42 @@
+server:
+  port: 0
+
+spring:
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: ru.practicum.AvroSerializer
+    consumer:
+      group-id: stats.aggregator
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: ru.practicum.UserActionDeserializer
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+    show-sql: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:6432/statsdb
+    username: postgres
+    password: postgres
+  sql:
+    init:
+      mode: always
+
+kafka:
+  topic:
+    stats:
+      v1: stats.user-actions.v1
+    similarity:
+      v1: stats.events-similarity.v1
+
+
+rates:
+  rates:
+    VIEW: 0.4
+    REGISTER: 0.8
+    LIKE: 1.0
+
