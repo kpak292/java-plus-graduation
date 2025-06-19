@@ -13,7 +13,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
-@Table(name = "event_similarity", schema = "aggregator_service")
+@Table(name = "event_similarity", schema = "stats_service")
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventSimilarity {

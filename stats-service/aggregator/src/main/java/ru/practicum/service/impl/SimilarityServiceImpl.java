@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.practicum.config.RateConfig;
-import ru.practicum.dto.EventSimilarityCalculationResult;
+import ru.practicum.repository.EventSimilarityCalculationResult;
 import ru.practicum.ewm.stats.avro.ActionTypeAvro;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.mapper.AggregatorMapper;

@@ -7,9 +7,9 @@ spring:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: ru.practicum.AvroSerializer
     consumer:
-      group-id: stats.aggregator
+      group-id: stats.analyzer
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: ru.practicum.UserActionDeserializer
+      value-deserializer: ru.practicum.EventSimilarityDeserializer
   jpa:
     hibernate:
       ddl-auto: none
@@ -28,18 +28,9 @@ spring:
 
 kafka:
   topic:
-    stats:
-      v1: stats.user-actions.v1
     similarity:
       v1: stats.events-similarity.v1
 
 grpc:
   server:
     port: 0
-
-rates:
-  rates:
-    VIEW: 0.4
-    REGISTER: 0.8
-    LIKE: 1.0
-

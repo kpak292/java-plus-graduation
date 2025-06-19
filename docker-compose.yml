@@ -62,6 +62,30 @@ services:
 #      - SPRING_DATASOURCE_PASSWORD=postgres
 #      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
 
+#  aggregator-service:
+#    build: stats-service/aggregator-service
+#    container_name: aggregator-service-container
+#    depends_on:
+#      - stats-db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=stats_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
+#  analyzer-service:
+#    build: stats-service/analyzer-service
+#    container_name: analyzer-service-container
+#    depends_on:
+#      - stats-db
+#    environment:
+#      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/statsdb
+#      - SPRING_JPA_PROPERTIES_HIBERNATE_DEFAULT_SCHEMA=stats_service
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=postgres
+#      - SPRING_DRIVER_CLASS_NAME=org.postgresql.Driver
+
 #  user-service:
 #    build: user-service
 #    container_name: user-service-container

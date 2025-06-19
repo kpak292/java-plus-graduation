@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>aggregator</artifactId>
+    <artifactId>analyzer</artifactId>
 
     <dependencies>
         <dependency>
@@ -34,7 +34,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ru.practicum.AnalyzerApp</mainClass>
+                    <mainClass>ru.practicum.AggregatorApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>

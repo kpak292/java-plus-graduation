@@ -1,4 +1,4 @@
-package ru.practicum.dto;
+package ru.practicum.repository;
 
 import java.time.LocalDateTime;
 

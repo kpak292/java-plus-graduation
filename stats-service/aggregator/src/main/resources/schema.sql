@@ -1,5 +1,5 @@
-create schema if not exists "aggregator_service";
-SET SCHEMA 'aggregator_service';
+create schema if not exists "stats_service";
+SET SCHEMA 'stats_service';
 
 CREATE TABLE IF NOT EXISTS user_action
 (

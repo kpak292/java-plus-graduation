@@ -14,8 +14,9 @@
     <modules>
         <module>stats-server</module>
         <module>collector</module>
-        <module>serializatiion</module>
+        <module>serialization</module>
         <module>aggregator</module>
+        <module>analyzer</module>
     </modules>
 
     <properties>
