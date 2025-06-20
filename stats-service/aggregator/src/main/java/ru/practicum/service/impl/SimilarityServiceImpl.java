@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.practicum.config.RateConfig;
-import ru.practicum.repository.EventSimilarityCalculationResult;
 import ru.practicum.ewm.stats.avro.ActionTypeAvro;
 import ru.practicum.ewm.stats.avro.EventSimilarityAvro;
 import ru.practicum.mapper.AggregatorMapper;
 import ru.practicum.model.EventSimilarity;
+import ru.practicum.repository.EventSimilarityCalculationResult;
 import ru.practicum.repository.EventSimilarityRepository;
 import ru.practicum.service.SimilarityService;
 

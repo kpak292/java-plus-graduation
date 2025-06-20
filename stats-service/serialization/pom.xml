@@ -9,7 +9,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>serializatiion</artifactId>
+    <artifactId>serialization</artifactId>
     <packaging>pom</packaging>
     <modules>
         <module>avro-schemas</module>
