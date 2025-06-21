@@ -39,7 +39,11 @@ public interface EventService {
                                                  int size,
                                                  HttpServletRequest request);
 
-    EventDto findEventPublic(long eventId, HttpServletRequest request);
+    EventDto findEventPublic(long eventId, long userId);
 
     void setConfirmed(long eventId, long requests);
+
+    List<EventDto> findRecommendations(long userId);
+
+    void likeEvent(long userId, long eventId);
 }

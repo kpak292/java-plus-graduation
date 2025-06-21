@@ -18,9 +18,9 @@ message SimilarEventsRequestProto{
 
 message InteractionsCountRequestProto{
   int64 event_id = 1;
-  double score = 2;
 }
 
 message RecommendedEventProto{
   int64 event_id = 1;
+  double score = 2;
 }

@@ -1,9 +1,11 @@
 package ru.practicum.service.impl;
 
+import com.google.protobuf.Timestamp;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.practicum.client.CollectorClient;
 import ru.practicum.clients.EventClient;
 import ru.practicum.dto.event.EventDto;
 import ru.practicum.dto.event.EventRequestStatusUpdateRequest;
@@ -14,13 +16,17 @@ import ru.practicum.dto.event.enums.RequestStatus;
 import ru.practicum.exceptions.ConflictException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
+import ru.practicum.grpc.stats.event.ActionTypeProto;
+import ru.practicum.grpc.stats.event.UserActionProto;
 import ru.practicum.mapper.RequestMapper;
 import ru.practicum.model.Request;
 import ru.practicum.repository.RequestRepository;
 import ru.practicum.service.RequestService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,6 +34,7 @@ import java.util.Collection;
 public class RequestServiceImpl implements RequestService {
     private final RequestRepository requestRepository;
     private final EventClient eventClient;
+    private final CollectorClient collectorClient;
 
 
     @Transactional
@@ -50,6 +57,7 @@ public class RequestServiceImpl implements RequestService {
                 request.setStatus(RequestStatus.PENDING);
             else {
                 request.setStatus(RequestStatus.CONFIRMED);
+                sendRegister(userId, eventId);
                 eventClient.setConfirmed(eventId, event.getConfirmedRequests() + 1L);
             }
             return RequestMapper.INSTANCE.toParticipationRequestDto(requestRepository.save(request));
@@ -134,5 +142,25 @@ public class RequestServiceImpl implements RequestService {
                 .map(RequestMapper.INSTANCE::toParticipationRequestDto)
                 .toList());
         return result;
+    }
+
+    @Override
+    public Boolean checkRegister(long userId, long eventId) {
+        Optional<Request> dbRequest = requestRepository.findByUserIdAndEventId(userId, eventId);
+        return dbRequest.isPresent() && dbRequest.get().getStatus().equals(RequestStatus.CONFIRMED);
+    }
+
+    private void sendRegister(long userId, long eventId) {
+        UserActionProto actionProto = UserActionProto.newBuilder()
+                .setUserId(userId)
+                .setEventId(eventId)
+                .setActionType(ActionTypeProto.ACTION_REGISTER)
+                .setTimestamp(Timestamp.newBuilder()
+                        .setSeconds(Instant.now().getEpochSecond())
+                        .setNanos(Instant.now().getNano())
+                        .build())
+                .build();
+
+        collectorClient.sendUserAction(actionProto);
     }
 }
