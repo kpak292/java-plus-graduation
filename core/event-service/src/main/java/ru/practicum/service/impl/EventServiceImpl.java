@@ -1,5 +1,6 @@
 package ru.practicum.service.impl;
 
+import com.google.protobuf.Timestamp;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -9,18 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.Constants;
+import ru.practicum.client.AnalyzerClient;
+import ru.practicum.client.CollectorClient;
 import ru.practicum.clients.CommentClient;
-import ru.practicum.clients.StatsClient;
+import ru.practicum.clients.RequestClient;
 import ru.practicum.dto.comment.CommentDto;
 import ru.practicum.dto.event.*;
 import ru.practicum.dto.event.enums.EventActionStateAdmin;
 import ru.practicum.dto.event.enums.EventState;
 import ru.practicum.dto.event.enums.SortingOptions;
-import ru.practicum.dto.stats.StatsHitDto;
-import ru.practicum.dto.stats.StatsViewDto;
 import ru.practicum.exceptions.ConflictException;
 import ru.practicum.exceptions.NotFoundException;
 import ru.practicum.exceptions.ValidationException;
+import ru.practicum.grpc.stats.event.*;
 import ru.practicum.mapper.EventMapper;
 import ru.practicum.mapper.EventUpdater;
 import ru.practicum.model.Event;
@@ -29,8 +31,8 @@ import ru.practicum.repository.EventRepository;
 import ru.practicum.repository.LocationRepository;
 import ru.practicum.service.EventService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,8 +42,10 @@ import java.util.Optional;
 public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
-    private final StatsClient statsClient;
+    private final AnalyzerClient analyzerClient;
+    private final CollectorClient collectorClient;
     private final CommentClient commentClient;
+    private final RequestClient requestClient;
 
     @Override
     public EventDto save(long userId, NewEventDto newEventDto) {
@@ -64,10 +68,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventDto findEvent(long eventId, long userId) {
-        return EventMapper.INSTANCE.getEventDto(
-                eventRepository.findByIdAndUserId(eventId, userId)
-                        .orElseThrow(() -> new NotFoundException("event is not found with id = " + eventId))
-        );
+        return findEventById(eventId)
+                .orElseThrow(() -> new NotFoundException("event is not found with id = " + eventId));
     }
 
     @Override
@@ -137,7 +139,7 @@ public class EventServiceImpl implements EventService {
         if (event.getState() == EventState.PUBLISHED) {
             event.setPublishedOn(LocalDateTime.now());
             event.setConfirmedRequests(0L);
-            event.setViews(0L);
+            event.setRating(0D);
         }
         return EventMapper.INSTANCE.getEventDto(event);
     }
@@ -192,12 +194,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventDto findEventPublic(long eventId, HttpServletRequest request) {
+    public EventDto findEventPublic(long eventId, long userId) {
         Event baseEvent = eventRepository.findByIdAndStatus(eventId, EventState.PUBLISHED)
                 .orElseThrow(() -> new NotFoundException("published event is not found with id = " + eventId));
-        sendStats(request);
 
-        baseEvent.setViews(getViews(baseEvent, request));
+        baseEvent.setRating(sendStats(userId, eventId));
         eventRepository.save(baseEvent);
         List<CommentDto> comments = commentClient.getComments(eventId);
         if (!comments.isEmpty()) {
@@ -218,23 +219,52 @@ public class EventServiceImpl implements EventService {
         eventRepository.save(event);
     }
 
-    private void sendStats(HttpServletRequest request) {
-        log.debug("save stats hit, uri = {}, remoteAddr = {}", request.getRequestURI(), request.getRemoteAddr());
-        statsClient.saveHit(StatsHitDto.builder()
-                .app("main-service")
-                .uri(request.getRequestURI())
-                .ip(request.getRemoteAddr())
-                .timestamp(LocalDateTime.now(ZoneId.systemDefault()))
-                .build());
+    @Override
+    public List<EventDto> findRecommendations(long userId) {
+        List<Long> eventIdList = analyzerClient.getRecommendationsForUser(UserPredictionsRequestProto.newBuilder()
+                        .setUserId(userId)
+                        .setMaxResults(3)
+                        .build()).stream()
+                .mapToLong(RecommendedEventProto::getEventId)
+                .boxed().toList();
+
+        return eventRepository.findAllById(eventIdList).stream()
+                .map(EventMapper.INSTANCE::getEventDto)
+                .toList();
     }
 
-    private long getViews(Event event, HttpServletRequest request) {
-        var statsViewDtoCollection = statsClient.getStat(event.getPublishedOn().format(Constants.DATE_TIME_FORMATTER),
-                LocalDateTime.now().format(Constants.DATE_TIME_FORMATTER),
-                List.of(request.getRequestURI()),
-                true);
-        return statsViewDtoCollection.stream()
-                .mapToLong(StatsViewDto::getHits)
+    @Override
+    public void likeEvent(long userId, long eventId) {
+        if (requestClient.checkRegistration(userId, eventId)) {
+            collectorClient.sendUserAction(UserActionProto.newBuilder()
+                    .setUserId(userId)
+                    .setEventId(eventId)
+                    .setActionType(ActionTypeProto.ACTION_LIKE)
+                    .setTimestamp(Timestamp.newBuilder()
+                            .setSeconds(Instant.now().getEpochSecond())
+                            .setNanos(Instant.now().getNano())
+                            .build())
+                    .build());
+        }else{
+            throw new ConflictException("User is not registered for this event");
+        }
+    }
+
+    private Double sendStats(Long userId, Long eventId) {
+        UserActionProto actionProto = UserActionProto.newBuilder()
+                .setUserId(userId)
+                .setEventId(eventId)
+                .setActionType(ActionTypeProto.ACTION_VIEW)
+                .setTimestamp(Timestamp.newBuilder()
+                        .setSeconds(Instant.now().getEpochSecond())
+                        .setNanos(Instant.now().getNano())
+                        .build())
+                .build();
+        collectorClient.sendUserAction(actionProto);
+
+        InteractionsCountRequestProto requestProto = InteractionsCountRequestProto.newBuilder().setEventId(eventId).build();
+        return analyzerClient.getInteractionsCount(requestProto).stream().mapToDouble(
+                        RecommendedEventProto::getScore)
                 .sum();
     }
 }

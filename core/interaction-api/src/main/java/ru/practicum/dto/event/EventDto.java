@@ -40,6 +40,6 @@ public class EventDto {
     Boolean requestModeration;
     EventState state;
     String title;
-    Long views;
+    Double rating;
     List<CommentDto> comments;
 }

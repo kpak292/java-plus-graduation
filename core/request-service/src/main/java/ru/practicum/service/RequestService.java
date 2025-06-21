@@ -19,6 +19,6 @@ public interface RequestService {
                                                         long eventId,
                                                         EventRequestStatusUpdateRequest request);
 
-
+    Boolean checkRegister(long userId, long eventId);
 }
 
